@@ -1,0 +1,115 @@
+<div class="account-page">
+  <div class="main-wrapper">
+    <div class="account-content">
+      <!-- <a [routerLink]="routes.jobList" class="btn btn-primary apply-btn">Apply Job</a> -->
+      <div class="container">
+        <!-- Account Logo -->
+
+        <!-- /Account Logo -->
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card profile-box flex-fill">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6 ">
+                      <img alt="" src="assets/img/profiles/muscle-12r.jpg" class="card-img-top  custom-height">
+                    </div>
+                    <div class="col-md-6">
+                      <div class="account-box">
+                        <div class="account-wrapper">
+                          <div class="account-logo">
+                            <a href="javascript:void(0);"><img src="assets/img/logo2.png" alt="Fitness Studio" /></a>
+                          </div> 
+                          <h3 class="account-title">Sign In</h3>
+                          <div id="alert" [ngClass]="response ? 'alert alert-success' : 'alert alert-danger'"
+                            *ngIf="responseText!=''">
+                            {{responseText}}
+                          </div>
+                          <form [formGroup]="form" (ngSubmit)="submit()">
+                            <label class="col-form-label" for="">User Type</label>
+                            <div class="input-block mb-3 form-focus inputs">
+                              <mat-form-field appearance="fill">
+                                <mat-label> Select User Type </mat-label>
+                                <mat-select name="UserType" formControlName="UserType"
+                                  (ngModelChange)="OnUserTypeChange($event)">
+                                  <!-- <mat-option value="">  </mat-option> -->
+                                  <mat-option *ngFor="let u of UserType" [value]="u.Id">{{u.TypeCode}}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="input-block mb-3">
+                              <label class="col-form-label" for="">User ID</label>
+                              <input class="form-control" type="text" formControlName="UserName" id="UserName"
+                                [ngClass]="{'is-invalid': f['UserName'].touched && f['UserName'].invalid}" />
+
+                              <div *ngIf="f['UserName'].touched && f['UserName'].invalid" class="text-danger">
+                                <div *ngIf="f['UserName'].errors && f['UserName'].errors['required']">UserID is required
+                                </div>
+                                <div *ngIf="f['UserName'].errors && f['UserName'].errors['UserName']">
+                                  Please, enter valid User ID
+                                </div>
+                              </div>
+                            </div>
+                            <div class="input-block mb-3">
+                              <div class="row">
+                                <div class="col">
+                                  <label class="col-form-label" for="">Password</label>
+                                </div>
+                              </div>
+                              <div class="position-relative login-page">
+                                <input class="form-control" [type]="Toggledata ? 'Password' : 'text'"
+                                  formControlName="Password" id="Password"
+                                  [ngClass]="{'is-invalid': f['Password'].touched && f['Password'].invalid}" />
+                                <span
+                                  [ngClass]="Toggledata === true ? 'fa toggle-password fa-eye-slash' : 'fa toggle-password fa-eye'"
+                                  (click)="iconLogle()" (keydown.enter)="iconLogle()" tabindex="0"></span>
+                              </div>
+                              <div *ngIf="f['Password'].touched && f['Password'].invalid" class="text-danger">
+                                <div *ngIf="f['Password'].errors && f['Password'].errors['required']">
+                                  Password is required.
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col">
+                                  <!-- <div class="row">
+                                    <div class="mb-26">
+                                      <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-6">
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="checkbox" [value]="false"
+                                            id="flexCheckDefault" name="Reminder" formControlName="Reminder" />
+                                          <label> Reminder </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>-->
+                                </div>
+                                <div class="col-auto">
+                                  <div class="mb-26">
+                                    <a class="text-muted" [routerLink]="'/forgot-password'">
+                                      <h5>Forgot password?</h5>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row filter-row d-flex justify-content-end">
+                              <div class="col-sm-12 col-md-12 text-end">
+                                <button class="btn btn-primary signIn-btn mr-2" [disabled]="form.invalid"
+                                  type="submit">Sign in </button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

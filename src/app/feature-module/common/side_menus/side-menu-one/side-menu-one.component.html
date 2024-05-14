@@ -1,0 +1,70 @@
+<!-- Sidebar -->
+<div class="sidebar" (mouseover)="miniSideBarMouseHover('over')" (mouseout)="miniSideBarMouseHover('out')"
+    (focus)="miniSideBarFocus('over')" (blur)="miniSideBarBlur('out')" id="sidebar">
+    <ng-scrollbar>
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                <ul class="sidebar-vertical">
+                    <ng-container *ngFor="let mainTittle of side_bar_data">
+                        <li class="menu-title">
+                            <span>{{ mainTittle.tittle }}</span>
+                        </li>
+                        <ng-container *ngFor="let menu of mainTittle?.menu">
+                            <li class="custom-style" [class.active]="base === menu.base"
+                                *ngIf="menu?.hasSubRoute === false">
+                                <a [routerLink]="menu?.route"><i [class]="'la la-' + menu.icon"></i>
+                                    <span>{{ menu?.menuValue }}</span>
+                                    <span *ngIf="menu.changeLogVersion === true"
+                                        class="badge badge-primary ms-auto">v3.4</span>
+                                </a>
+                            </li>
+                            <li class="submenu" *ngIf="menu.hasSubRoute === true" [class.active]="base === menu.base">
+                                <a href="javascript:void(0)" (click)="expandSubMenus(menu)"
+                                    (keydown.enter)="expandSubMenus(menu)" tabindex="0" [ngClass]="{
+                                    'subdrop': menu.showSubRoute === true,
+                                    'noti-dot': menu.dot === true
+                                        }">
+                                    <i [class]="'la la-' + menu.icon"></i>
+                                    <span>{{ menu.menuValue }}</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul [ngClass]="
+                                            menu.showSubRoute === true
+                                            ? 'show-sub-menu'
+                                            : 'hide-sub-menu'
+                                         ">
+                                    <ng-container *ngFor="let subMenus of menu.subMenus">
+                                        <li>
+                                            <a [routerLink]="subMenus.route"
+                                                [class.active]="page === subMenus.base || page === subMenus.base2 || page === subMenus.base3 || page === subMenus.base4 || page === subMenus.base5 || page === subMenus.base6 || page === subMenus.base7 || page === subMenus.base8">
+                                                <span *ngIf="subMenus.currentActive === true"
+                                                    class="badge rounded-pill bg-primary float-end">1</span>
+                                                {{ subMenus.menuValue }}</a>
+                                        </li>
+                                    </ng-container>
+
+                                </ul>
+                            </li>
+                        </ng-container>
+                    </ng-container>
+                    <!-- *ngIf="userType !=='Member'" -->
+                    <li class="sidebar-menu" >
+                        <a [routerLink]="ProfileCreation"><i class="la la-user-alt"></i> <span>Profile</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu">
+                        <a [routerLink]="GoalSetting"><i class="fa fa-trophy"></i> <span>Goal Setting</span> </a>
+                    </li>
+                    <li class="sidebar-menu">
+                        <a [routerLink]="ActivityTracking"><i class="fas fa-running"></i> <span>Activity Tracking</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu">
+                        <a [routerLink]="ProgressTracking"><i class="la la-share-alt"></i> <span>Progress Tracking</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-scrollbar>
+</div>

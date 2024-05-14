@@ -1,0 +1,387 @@
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col">
+                <h3 class="card-title mb-2">Goal Setting</h3>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- <div class="card"> -->
+    <div class="table_header">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="dataTables_length">
+                    <label>
+                        Show
+                        <select [(ngModel)]="pageSize" (ngModelChange)="changePageSize()"
+                            class="form-control form-control-sm">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        Entries
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="dataTables_filter">
+                    <label>
+                        Search:
+                        <input [(ngModel)]="searchDataValue" (ngModelChange)="searchData(searchDataValue)"
+                            class="form-control form-control-sm" />
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <button class="input-block btn btn-primary add-btn" type="button" data-bs-toggle="modal"
+                    data-bs-target="#add_goalsetting" (click)="AddGoalSetting()"><i class="fa-solid fa-plus"></i>
+                    Add
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="payroll-table card">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table table-hover table-radius">
+                <thead class="bg-secondary pt-5 pb-5 ">
+                    <tr>
+                        <th>Action</th>
+                        <th mat-sort-header="GoalType"> Goal Type</th>
+                        <th mat-sort-header="TargetWeight">Target Weight (kg)</th>
+                        <th mat-sort-header="TargetBodyFat">Target Body Fat (%) </th>
+                        <th mat-sort-header="TargetMuscleMass">Target Muscle Mass (kg)</th>
+                        <th mat-sort-header="TargetDuration">Target Duration (Week)</th>
+                        <th mat-sort-header="WorkoutFrequency">Preferred Workout Frequency (Per Week)</th>
+                        <th mat-sort-header="TargetDate">Target Date</th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let obj of goalsetting;let i=index" >
+                        <td>
+                            <div class="dropdown dropdown-action">
+                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                   
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#add_goalsetting" (click)="editGoalSetting(i)"><i class="fa-solid fa-pencil m-r-5"></i>
+                                        Edit </a>
+                                    
+
+                                </div>
+                            </div>
+                        </td>
+                        <td >{{obj.GoalType }}</td>
+                        <td>{{obj.TargetWeight}}</td>
+                        <td>{{obj.TargetBodyFat}}</td>
+                        <td>{{obj.TargetMuscleMass}}</td>
+                        <td>{{obj.TargetDuration}}</td>
+                        <td>{{obj.WorkoutFrequency}}</td>
+                        <td>{{obj.TargetDate | date:'dd-MM-yyyy'}}</td>
+                        <!-- <td>{{obj.WorkoutDuration}}</td> -->
+                        
+                    </tr>
+                    <tr *ngIf="goalsetting.length === 0">
+                        <td colspan="10">
+                            <h5 style="text-align: center;">No data found</h5>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table_footer">
+            <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info">
+                    Showing {{ serialNumberArray[0] }} to
+                    {{ serialNumberArray[serialNumberArray.length - 1] }} of
+                    {{ totalData }} entries
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-7">
+                <div class="pagination_section">
+                    <ul class="pagination">
+                        <li class="page-item" [ngClass]="{
+                      disabled: currentPage === 1
+                    }">
+                            <a (click)="getMoreData('previous')" class="page-link" href="javascript:void(0);"
+                                tabindex="-1">Previous</a>
+                        </li>
+
+                        <ng-container *ngFor="let item of pageNumberArray; let i = index">
+                            <li class="page-item" [class.active]="item === currentPage" [ngClass]="
+                        (pageNumberArray[currentPage - 2] > item &&
+                          item !== 1 &&
+                          pageNumberArray.length > 6) ||
+                        (pageNumberArray[currentPage] < item &&
+                          item !== 1 &&
+                          pageNumberArray.length > 6 &&
+                          pageNumberArray.length !== item)
+                          ? 'hide-page-no'
+                          : 'show-page-no'
+                      ">
+                                <a (click)="moveToPage(item)" class="page-link" href="javascript:void(0);">
+                                    {{ item }}
+                                </a>
+                            </li>
+                            <li class="page-item" *ngIf="
+                        i === 0 && pageNumberArray.length > 6 && currentPage > 2
+                      " [hidden]="currentPage === 1" (click)="moveToPage(currentPage - 2)"
+                                (keydown.enter)="moveToPage(currentPage - 2)" tabindex="0">
+                                <a class="page-link" href="javascript:void(0);"> ... </a>
+                            </li>
+                            <li *ngIf="
+                        i === pageNumberArray.length - 2 &&
+                        pageNumberArray.length > 6
+                      " [hidden]="
+                        currentPage >=
+                          pageNumberArray[pageNumberArray.length - 2] ||
+                        totalData < serialNumberArray[serialNumberArray.length - 1]
+                      " class="page-item" (click)="moveToPage(currentPage + 2)"
+                                (keydown.enter)="moveToPage(currentPage + 2)" tabindex="0">
+                                <a class="page-link" href="javascript:void(0);"> ... </a>
+                            </li>
+                        </ng-container>
+
+                        <li class="page-item" [ngClass]="{
+                      disabled:
+                        currentPage ===
+                          pageNumberArray[pageNumberArray.length - 1] ||
+                        goalsetting.length === 0
+                    }">
+                            <a (click)="getMoreData('next')" class="page-link" href="javascript:void(0);">Next
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Add Addition Modal -->
+<div id="add_goalsetting" class="modal custom-modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Goal Setting </h5>
+            </div>
+            <div id="alert" [ngClass]="response ? 'alert alert-success' : 'alert alert-danger'"
+                *ngIf="responseText!=''">
+                {{responseText}}
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="addgoalform" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Goal Type<span
+                                        class="text-danger"> * </span></label>
+                                <select name="GoalTypeId" class="form-control m-b form-select" [class.invalid]="
+                                        addgoalform.get('GoalTypeId')?.invalid &&
+                                        addgoalform.get('GoalTypeId')?.touched" formControlName="GoalTypeId">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let g of GetGoalType" [ngValue]="g.id">{{g.name}}
+                                    </option>
+                                    <!-- <option value="Weight Loss">Weight Loss</option>
+                                    <option value="Muscle Gain"> Muscle Gain</option>
+                                    <option value="Strength Building">Strength Building</option>
+                                    <option value="Flexibility Improvement">Flexibility Improvement</option>
+                                    <option value="Endurance Enhancement">Endurance Enhancement</option>
+                                    <option value="Other">Other</option> -->
+                                </select>
+                                <div *ngIf="
+                                addgoalform.get('GoalTypeId')?.invalid &&
+                                addgoalform.get('GoalTypeId')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addgoalform.get('GoalTypeId')?.invalid &&
+                                    addgoalform.get('GoalTypeId')?.touched
+                              " class="text-danger">
+                                        *Goal Type is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Target Weight (kg)<span
+                                        class="text-danger"> * </span></label>
+                                <input type="number" class="form-control" name="TargetWeight" [class.invalid]="
+                                addgoalform.get('TargetWeight')?.invalid &&
+                                addgoalform.get('TargetWeight')?.touched
+                            " formControlName="TargetWeight" pattern="\d+(\.\d+)?"  maxlength="7"/>
+                                <div *ngIf="
+                                addgoalform.get('TargetWeight')?.invalid &&
+                                addgoalform.get('TargetWeight')?.touched
+                            ">
+                                    <small *ngIf="addgoalform.get('TargetWeight').errors?.['required']"
+                                        class="text-danger">
+                                        *Target Weight is required</small>
+                                    <small *ngIf="addgoalform.get('TargetWeight').errors?.['pattern']"
+                                        class="text-danger">
+                                        *Please enter the valid number
+                                    </small>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Target Body Fat (%)<span
+                                        class="text-danger"> </span></label>
+                                <input type="number" class="form-control" name="TargetBodyFat" [class.invalid]="
+                                addgoalform.get('TargetBodyFat')?.invalid &&
+                                addgoalform.get('TargetBodyFat')?.touched
+                            " formControlName="TargetBodyFat" pattern="\d+(\.\d+)?"  maxlength="7"/>
+                                <div *ngIf="
+                                addgoalform.get('TargetBodyFat')?.invalid &&
+                                addgoalform.get('TargetBodyFat')?.touched
+                            ">
+                                    <small *ngIf="addgoalform.get('TargetBodyFat').errors?.['required']"
+                                        class="text-danger">
+                                        *Target Body Fat (%) is required</small>
+                                    <small *ngIf="addgoalform.get('TargetBodyFat').errors?.['pattern']"
+                                        class="text-danger">
+                                        *Please enter the valid number
+                                    </small>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Target Muscle Mass (kg)<span
+                                        class="text-danger"> </span></label>
+                                <input type="number" class="form-control" name="TargetMuscleMass" [class.invalid]="
+                                addgoalform.get('TargetMuscleMass')?.invalid &&
+                                addgoalform.get('TargetMuscleMass')?.touched
+                            " formControlName="TargetMuscleMass" pattern="\d+(\.\d+)?"  maxlength="7"/>
+                                <div *ngIf="
+                                addgoalform.get('TargetMuscleMass')?.invalid &&
+                                addgoalform.get('TargetMuscleMass')?.touched
+                            ">
+                                    <small *ngIf="addgoalform.get('TargetMuscleMass').errors?.['required']"
+                                        class="text-danger">
+                                        *Target Muscle Mass (kg) is required</small>
+                                    <small *ngIf="addgoalform.get('TargetMuscleMass').errors?.['pattern']"
+                                        class="text-danger">
+                                        *Please enter the valid number
+                                    </small>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Target Duration (Week)<span
+                                        class="text-danger"> </span></label>
+                                <input type="number" class="form-control" name="TargetDuration" [class.invalid]="
+                                addgoalform.get('TargetDuration')?.invalid &&
+                                addgoalform.get('TargetDuration')?.touched
+                            " formControlName="TargetDuration" pattern="\d+(\.\d+)?"  maxlength="7"/>
+                                <div *ngIf="
+                                addgoalform.get('TargetDuration')?.invalid &&
+                                addgoalform.get('TargetDuration')?.touched
+                            ">
+                                    <small *ngIf="addgoalform.get('TargetDuration').errors?.['required']"
+                                        class="text-danger">
+                                        *Target Duration(Week) is required</small>
+                                    <small *ngIf="addgoalform.get('TargetDuration').errors?.['pattern']"
+                                        class="text-danger">
+                                        *Please enter the valid number
+                                    </small>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6" >
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Preferred Workout
+                                    Frequency (Per Week)<span class="text-danger"> </span></label>
+                                <input type="number" class="form-control" name="WorkoutFrequency" [class.invalid]="
+                                addgoalform.get('WorkoutFrequency')?.invalid &&
+                                addgoalform.get('WorkoutFrequency')?.touched
+                            " formControlName="WorkoutFrequency" pattern="\d+(\.\d+)?"  maxlength="7"  />
+                                <div *ngIf="
+                                addgoalform.get('WorkoutFrequency')?.invalid &&
+                                addgoalform.get('WorkoutFrequency')?.touched
+                            ">
+                                    <small *ngIf="addgoalform.get('WorkoutFrequency').errors?.['required']"
+                                        class="text-danger">
+                                        *Preferred Workout Frequency (Per Week) is required</small>
+                                    <small *ngIf="addgoalform.get('WorkoutFrequency').errors?.['pattern']"
+                                        class="text-danger">
+                                        *Please enter the valid number
+                                    </small>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                              <label for="" class="col-lg-12 control-label col-form-label">Target Date<span
+                                  class="text-danger"> * </span></label>
+                              <input type="Date" class="form-control" name="TargetDate"
+                                [class.invalid]="addgoalform.get('TargetDate')?.invalid && addgoalform.get('TargetDate')?.touched"
+                                formControlName="TargetDate" />
+                              <div *ngIf="addgoalform.get('TargetDate')?.invalid && addgoalform.get('TargetDate')?.touched">
+                                <small *ngIf="addgoalform.get('TargetDate')?.errors?.['required']" class="text-danger">* Target Date is
+                                  required</small>
+                                <small *ngIf="addgoalform.get('TargetDate')?.errors?.['dateNotGreaterThanCurrent']" class="text-danger">* Target Date must be greater than the current date</small>
+                              </div>
+                            </div>
+                          </div>
+                          
+                        
+                           
+                        </div>
+                        <div class="row filter-row d-flex text-center">
+                            <div class="col-sm-12 col-md-12 text-center">
+                                <button class="btn btn-primary submit-btn mr-2"
+                                    [disabled]="!addgoalform.valid">Save</button>
+                                <a href="javascript:void(0);" data-bs-dismiss="modal" id="modalclose"
+                                    class="btn btn-primary cancel-btn">Cancel</a>
+                            </div>
+                        </div>
+                        
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Addition Modal -->
+<!-- Delete paycalender Modal -->
+<div class="modal custom-modal fade" id="delete_goalsetting" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Are you sure you want to delete?</h3>
+
+                </div>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6" style="padding-left: 110px;">
+                            <a class="btn btn-primary continue-btn">Delete</a>
+                        </div>
+                        <div class="col-6" style="padding-left: 0px;">
+                            <a href="javascript:void(0);" data-bs-dismiss="modal"
+                                class="btn btn-primary cancel-btn">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete paycalender Modal -->
