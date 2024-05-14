@@ -1,0 +1,67 @@
+<div class="float-container" style="height: 550px;">
+
+   <div class="row mb-6">
+      <div class="col-6 col-md-4"><label for="exampleFormControlSelect1">From</label><input type="date"
+              class="form-control" id="exampleInputdate" [(ngModel)]="fromDate" placeholder="From Date"></div>
+      <div class="col-6 col-md-4"><label for="exampleFormControlSelect1">To</label><input type="date"
+              class="form-control" id="exampleInputdate" [(ngModel)]="toDate" placeholder="To Date"></div>
+      <div class="col-6 col-md-4"><label for="exampleFormControlSelect1">Pay Group</label>
+          <select class="form-control" id="exampleFormControlSelect1">
+              <option selected="" disabled="">Select PayGroup</option>
+              <option>USA_WEEKLY_2023_09_12</option>
+          </select>
+      </div>
+      <div class="col-6 col-md-4"><button type="button" class="btn btn-primary mb-3" style="margin-right: 10px;" (click)="getFilteredData()">Search</button><button type="button" class="btn btn-primary mb-3" style="align-items:right;" (click)="resetFilter()">Reset</button></div>
+      
+  </div>
+
+   <div class="float-child" >
+      <div class="iq-card">
+         <div class="iq-card-header d-flex justify-content-between">
+            <div class="iq-header-title">
+               <h4 class="card-title">Stage Status</h4>
+            </div>
+         </div>
+         <div class="iq-card-body" style="height: 300px;">
+            <div id="apex-basic"><apx-chart [series]="requestDetails.series!" [chart]="requestDetails.chart!"
+                  [labels]="requestDetails.labels!" [responsive]="requestDetails.responsive!"
+                  [dataLabels]="requestDetails.dataLabels!"></apx-chart></div>
+            <div id="apex-basic"></div>
+         </div>
+      </div>
+   </div>
+
+   <div class="float-child">
+      <div class="iq-card" style="width: 490px;">
+         <div class="iq-card-header d-flex justify-content-between">
+            <div class="iq-header-title">
+               <h4 class="card-title">Paygroup Records</h4>
+            </div>
+         </div>
+         <div class="iq-card-body" style="height: 300px;">
+            <div id="apex-basic"><apx-chart [series]="recordDetails.seriess!" [chart]="recordDetails.chart!"
+                  [labels]="recordLabels" [responsive]="recordDetails.responsive!"
+                  [dataLabels]="recordDetails.dataLabels!"></apx-chart></div>
+            <div id="apex-column"></div>
+         </div>
+      </div>
+
+   </div>
+</div>
+<div class="float-container" >
+   <div class="iq-card">
+      <div class="iq-card-header d-flex justify-content-between">
+         <div class="iq-header-title">
+            <h4 class="card-title">Request Details</h4>
+         </div>
+      </div>
+      <div class="iq-card-body">
+         <div id="apex-basic"><apx-chart [series]="requestDetails.series!" [chart]="requestDetails.chart!"
+               [labels]="requestDetails.labels!" [responsive]="requestDetails.responsive!"
+               [dataLabels]="requestDetails.dataLabels!"></apx-chart></div>
+         <div id="apex-basic"></div>
+      </div>
+   </div>
+
+
+</div>

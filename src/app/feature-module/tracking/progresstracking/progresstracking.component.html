@@ -1,0 +1,111 @@
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="page-title">Progress Tracking</h3>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+
+    <form [formGroup]="addProgressform" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card profile-box flex-fill" *ngFor="let obj of progresstracking; let i = index">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="personal-info">
+                                    <li class="mb-25">
+                                        <div class="col-md-2">
+                                            <div style="font-size: large;font-style: inherit;">Goal Type :</div>
+                                        </div>
+                                        <div class="col-md-4 text-start">
+                                            <div style="font-size: large;font-style: inherit;color: darkblue;"> {{obj.GoalTypeName}}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="text-start">
+                                        <div class="col-md-4">
+                                            <h5 style="font-size: medium;font-style: inherit;">Description</h5>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h5 style="font-size: medium;font-style: inherit;">Target</h5>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h5 style="font-size: medium;font-style: inherit;">Current</h5>
+                                        </div>
+                                    </li>
+                                    <hr class="dotted-line">
+                                    <li class="row text-start mb-25">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h5 class="text-dark">Date</h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5 class="text-dark">{{obj.TargetDate | date:'dd-MM-yyyy' }}</h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5 style="color: rgb(13, 13, 138);">{{ObjDate | date:'dd-MM-yyyy' }}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="row text-start mb-25">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h5 class="text-dark">Weight (kg)</h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5 class="text-dark">{{obj.TargetWeight}}</h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5 style="color: rgb(13, 13, 138);">{{ObjWeight}}</h5>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="row text-start mb-25">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h5 class="text-dark">Body Fat (%)</h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5 class="text-dark">{{obj.TargetBodyFat}}</h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5 style="color: rgb(13, 13, 138);">{{ObjBodyFat}}</h5>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="row text-start mb-25">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h5 class="text-dark">Muscle Mass (kg)</h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5 class="text-dark">{{obj.TargetMuscleMass}}</h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5 style="color: rgb(13, 13, 138);">{{ObjMuscleMass}}</h5>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6 d-flex">
+                                <div class="flex-fill">
+                                    <img alt="" src="assets/img/profiles/muscle-11.jpg"
+                                        class="card-img-top  custom-height">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
