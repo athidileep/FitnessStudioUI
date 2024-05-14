@@ -1,0 +1,915 @@
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col">
+                <h3 class="card-title mb-2">Activity Tracking</h3>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- <div class="card"> -->
+    <div class="table_header">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="dataTables_length">
+                    <label>
+                        Show
+                        <select [(ngModel)]="pageSize" (ngModelChange)="changePageSize()"
+                            class="form-control form-control-sm">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        Entries
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="dataTables_filter">
+                    <label>
+                        Search:
+                        <input [(ngModel)]="searchDataValue" (ngModelChange)="searchData(searchDataValue)"
+                            class="form-control form-control-sm" />
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <button class="input-block btn btn-primary add-btn" type="button" data-bs-toggle="modal"
+                    data-bs-target="#add_activitytrack" (click)="AddActivityTracking()"><i class="fa-solid fa-plus"></i>
+                    Add
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="payroll-table card">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table table-hover table-radius">
+                <thead class="bg-secondary pt-5 pb-5 ">
+                    <tr>
+                        <th>Action</th>
+                        <th mat-sort-header="Date"> Date</th>
+                        <th mat-sort-header="BodyWeight">Weight (Body)</th>
+                        <th mat-sort-header="BodyFat">Fat (Body)</th>
+                        <th mat-sort-header="MuscleMass">Muscle Mass</th>
+                        <th mat-sort-header="ActivityTypeName">Activity Type</th>
+                        <th mat-sort-header="ActivityName">Activity Name</th>
+                        <th mat-sort-header="Duration">Duration (Minutes)</th>
+                        <th mat-sort-header="Reps">Reps</th>
+                        <th mat-sort-header="SetsInfo">Sets</th>
+                        <th mat-sort-header="LiftWeight">Weight (Lifting)</th>
+                        <th mat-sort-header="CaloriesBurned">Calories Burned</th>
+                        <th mat-sort-header="IntensityLevelIdName">Intensity Level</th>
+                        <th mat-sort-header="Notes">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let obj of activitytracking;let i=index">
+                        <td>
+                            <div class="dropdown dropdown-action">
+                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#edit_activitytrack" (click)="editActivityTracking(obj.id,i)"><i
+                                            class="fa-solid fa-pencil m-r-5"></i>
+                                        Edit</a>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#delete_activitytrack">
+                                        <i class="fa-regular fa-trash-can m-r-5"></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{obj.Date| date:'dd-MM-yyyy'}}</td>
+                        <td>{{obj.BodyWeight}}</td>
+                        <td>{{obj.BodyFat}}</td>
+                        <td>{{obj.MuscleMass}}</td>
+                        <td>{{obj.ActivityTypeName}}</td>
+                        <td>{{obj.ActivityName}}</td>
+                        <td>{{obj.Duration}}</td>
+                        <td>{{obj.Reps}}</td>
+                        <td>{{obj.SetsInfo}}</td>
+                        <td>{{obj.LiftWeight}}</td>
+                        <td>{{obj.CaloriesBurned}}</td>
+                        <td>{{obj.IntensityLevelIdName}}</td>
+                        <td>{{obj.Notes}}</td>
+                    </tr>
+                    <tr *ngIf="activitytracking.length === 0">
+                        <td colspan="10">
+                            <h5 style="text-align: center;">No data found</h5>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table_footer">
+            <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info">
+                    Showing {{ serialNumberArray[0] }} to
+                    {{ serialNumberArray[serialNumberArray.length - 1] }} of
+                    {{ totalData }} entries
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-7">
+                <div class="pagination_section">
+                    <ul class="pagination">
+                        <li class="page-item" [ngClass]="{
+                      disabled: currentPage === 1
+                    }">
+                            <a (click)="getMoreData('previous')" class="page-link" href="javascript:void(0);"
+                                tabindex="-1">Previous</a>
+                        </li>
+
+                        <ng-container *ngFor="let item of pageNumberArray; let i = index">
+                            <li class="page-item" [class.active]="item === currentPage" [ngClass]="
+                        (pageNumberArray[currentPage - 2] > item &&
+                          item !== 1 &&
+                          pageNumberArray.length > 6) ||
+                        (pageNumberArray[currentPage] < item &&
+                          item !== 1 &&
+                          pageNumberArray.length > 6 &&
+                          pageNumberArray.length !== item)
+                          ? 'hide-page-no'
+                          : 'show-page-no'
+                      ">
+                                <a (click)="moveToPage(item)" class="page-link" href="javascript:void(0);">
+                                    {{ item }}
+                                </a>
+                            </li>
+                            <li class="page-item" *ngIf="
+                        i === 0 && pageNumberArray.length > 6 && currentPage > 2
+                      " [hidden]="currentPage === 1" (click)="moveToPage(currentPage - 2)"
+                                (keydown.enter)="moveToPage(currentPage - 2)" tabindex="0">
+                                <a class="page-link" href="javascript:void(0);"> ... </a>
+                            </li>
+                            <li *ngIf="
+                        i === pageNumberArray.length - 2 &&
+                        pageNumberArray.length > 6
+                      " [hidden]="
+                        currentPage >=
+                          pageNumberArray[pageNumberArray.length - 2] ||
+                        totalData < serialNumberArray[serialNumberArray.length - 1]
+                      " class="page-item" (click)="moveToPage(currentPage + 2)"
+                                (keydown.enter)="moveToPage(currentPage + 2)" tabindex="0">
+                                <a class="page-link" href="javascript:void(0);"> ... </a>
+                            </li>
+                        </ng-container>
+
+                        <li class="page-item" [ngClass]="{
+                      disabled:
+                        currentPage ===
+                          pageNumberArray[pageNumberArray.length - 1] ||
+                          activitytracking.length === 0
+                    }">
+                            <a (click)="getMoreData('next')" class="page-link" href="javascript:void(0);">Next
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Add Addition Modal -->
+<div id="add_activitytrack" class="modal custom-modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Activity Tracking </h5>
+            </div>
+
+            <!-- <div id="alert" [ngClass]="response ? 'alert alert-success' : 'alert alert-danger'"
+                *ngIf="responseText!=''">
+                {{responseText}}
+            </div> -->
+            <div class="modal-body">
+                <form [formGroup]="addactivityform" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Date<span
+                                        class="text-danger"> * </span></label>
+                                <input type="Date" class="form-control" name="Date" [class.invalid]="
+                                addactivityform.get('Date')?.invalid &&
+                                addactivityform.get('Date')?.touched
+                            " formControlName="Date" />
+                                <div *ngIf="
+                                addactivityform.get('Date')?.invalid &&
+                                addactivityform.get('Date')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('Date')?.invalid &&
+                                    addactivityform.get('Date')?.touched
+                              " class="text-danger">
+                                        *Date is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Weight (Body)<span
+                                        class="text-danger"> * </span> </label>
+                                <input type="number" class="form-control" name="BodyWeight" [class.invalid]="
+                                addactivityform.get('BodyWeight')?.invalid &&
+                                addactivityform.get('BodyWeight')?.touched
+                            " formControlName="BodyWeight" />
+                                <div *ngIf="
+                                addactivityform.get('BodyWeight')?.invalid &&
+                                addactivityform.get('BodyWeight')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('BodyWeight')?.invalid &&
+                                    addactivityform.get('BodyWeight')?.touched
+                              " class="text-danger">
+                                        *Weight (Body) is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Fat (Body)<span
+                                        class="text-danger"> * </span> </label>
+                                <input type="number" class="form-control" name="BodyFat" [class.invalid]="
+                                addactivityform.get('BodyFat')?.invalid &&
+                                addactivityform.get('BodyFat')?.touched
+                            " formControlName="BodyFat" />
+                                <div *ngIf="
+                                addactivityform.get('BodyFat')?.invalid &&
+                                addactivityform.get('BodyFat')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('BodyFat')?.invalid &&
+                                    addactivityform.get('BodyFat')?.touched
+                              " class="text-danger">
+                                        *Fat (Body) is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Muscle Mass<span
+                                        class="text-danger"> * </span> </label>
+                                <input type="number" class="form-control" name="MuscleMass" [class.invalid]="
+                                addactivityform.get('MuscleMass')?.invalid &&
+                                addactivityform.get('MuscleMass')?.touched
+                            " formControlName="MuscleMass" />
+                                <div *ngIf="
+                                addactivityform.get('MuscleMass')?.invalid &&
+                                addactivityform.get('MuscleMass')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('MuscleMass')?.invalid &&
+                                    addactivityform.get('MuscleMass')?.touched
+                              " class="text-danger">
+                                        *Muscle Mass is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-8">
+
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Activity Type<span
+                                        class="text-danger"> * </span></label>
+                                <select name="ActivityTypeId" class="form-control m-b form-select" [class.invalid]="
+                                        addactivityform.get('ActivityTypeId')?.invalid &&
+                                    addactivityform.get('ActivityTypeId')?.touched" formControlName="ActivityTypeId"
+                                    (ngModelChange)="onTypeChange($event);updateTypes($event) ">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let c of ActivityType" [ngValue]="c.Id">{{c.ActivityName}}</option>
+                                </select>
+                                <div *ngIf="
+                                addactivityform.get('ActivityTypeId')?.invalid &&
+                                addactivityform.get('ActivityTypeId')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('ActivityTypeId')?.invalid &&
+                                    addactivityform.get('ActivityTypeId')?.touched
+                              " class="text-danger">
+                                        *Activity Type is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Activity Name<span
+                                        class="text-danger"> * </span></label>
+                                <input type="text" class="form-control" name="ActivityName" [class.invalid]="
+                                addactivityform.get('ActivityName')?.invalid &&
+                                addactivityform.get('ActivityName')?.touched
+                            " formControlName="ActivityName" />
+                                <div *ngIf="
+                                addactivityform.get('ActivityName')?.invalid &&
+                                addactivityform.get('ActivityName')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('ActivityName')?.invalid &&
+                                    addactivityform.get('ActivityName')?.touched
+                              " class="text-danger">
+                                        *Activity Name is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Duration (Minutes) <span
+                                        class="text-danger"> * </span></label>
+                                <input type="number" class="form-control" name="Duration" [class.invalid]="
+                                addactivityform.get('Duration')?.invalid &&
+                                addactivityform.get('Duration')?.touched
+                            " formControlName="Duration" />
+                                <div *ngIf="
+                                addactivityform.get('Duration')?.invalid &&
+                                addactivityform.get('Duration')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('Duration')?.invalid &&
+                                    addactivityform.get('Duration')?.touched
+                              " class="text-danger">
+                                        *Duration is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Reps </label>
+                                <input type="number" class="form-control" name="Reps" [class.invalid]="
+                                addactivityform.get('Reps')?.invalid &&
+                                addactivityform.get('Reps')?.touched
+                            " formControlName="Reps" />
+                                <div *ngIf="
+                                addactivityform.get('Reps')?.invalid &&
+                                addactivityform.get('Reps')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('Reps')?.invalid &&
+                                    addactivityform.get('Reps')?.touched
+                              " class="text-danger">
+                                        *Reps is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Sets </label>
+                                <input type="number" class="form-control" name="SetsInfo" [class.invalid]="
+                                addactivityform.get('SetsInfo')?.invalid &&
+                                addactivityform.get('SetsInfo')?.touched
+                            " formControlName="SetsInfo" />
+                                <div *ngIf="
+                                addactivityform.get('SetsInfo')?.invalid &&
+                                addactivityform.get('SetsInfo')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('SetsInfo')?.invalid &&
+                                    addactivityform.get('SetsInfo')?.touched
+                              " class="text-danger">
+                                        *Sets is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Weight (Lifting) </label>
+                                <input type="number" class="form-control" name="LiftWeight" [class.invalid]="
+                                addactivityform.get('LiftWeight')?.invalid &&
+                                addactivityform.get('LiftWeight')?.touched
+                            " formControlName="LiftWeight" />
+                                <div *ngIf="
+                                addactivityform.get('LiftWeight')?.invalid &&
+                                addactivityform.get('LiftWeight')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('LiftWeight')?.invalid &&
+                                    addactivityform.get('LiftWeight')?.touched
+                              " class="text-danger">
+                                        *Weight (Lifting) is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Calories Burned </label>
+                                <input type="number" class="form-control" name="CaloriesBurned" [class.invalid]="
+                                addactivityform.get('CaloriesBurned')?.invalid &&
+                                addactivityform.get('CaloriesBurned')?.touched
+                            " formControlName="CaloriesBurned" />
+                                <div *ngIf="
+                                addactivityform.get('CaloriesBurned')?.invalid &&
+                                addactivityform.get('CaloriesBurned')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('CaloriesBurned')?.invalid &&
+                                    addactivityform.get('CaloriesBurned')?.touched
+                              " class="text-danger">
+                                        *Calories Burned is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Intensity Level </label>
+                                <select name="IntensityLevelId" class="form-control m-b form-select" [class.invalid]="
+                                        addactivityform.get('IntensityLevelId')?.invalid &&
+                                    addactivityform.get('IntensityLevelId')?.touched"
+                                    formControlName="IntensityLevelId" (ngModelChange)="onIntensityTypeChange($event)">
+                                    <option value=0>--Select--</option>
+                                    <option *ngFor="let c of IntensityLevel" [ngValue]="c.Id">{{c.IntensityName}}
+                                    </option>
+                                </select>
+                                <div *ngIf="
+                                addactivityform.get('IntensityLevelId')?.invalid &&
+                                addactivityform.get('IntensityLevelId')?.touched
+                            ">
+                                    <small *ngIf="
+                                    addactivityform.get('IntensityLevelId')?.invalid &&
+                                    addactivityform.get('IntensityLevelId')?.touched
+                              " class="text-danger">
+                                        *Intensity Level is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-4">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Notes </label>
+
+                                <textarea type="text" class="form-control" name="Notes" [class.invalid]="
+                                addactivityform.get('Notes')?.invalid &&
+                                addactivityform.get('Notes')?.touched
+                                " formControlName="Notes"></textarea>
+                                <div *ngIf="
+                                addactivityform.get('Notes')?.invalid &&
+                                addactivityform.get('Notes')?.touched
+                                     ">
+                                    <small *ngIf="
+                                    addactivityform.get('Notes')?.invalid &&
+                                    addactivityform.get('Notes')?.touched
+                                    " class="text-danger">
+                                        *Notes is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-8  mb-25">
+                            <div id="alert" [ngClass]="response ? 'alert alert-success' : 'alert alert-danger'"
+                                *ngIf="responseText!=''">
+                                {{responseText}}
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-4 text-end mb-25">
+                            <!-- <label for="" class="col-lg-12 control-label col-form-label">&nbsp;</label> -->
+                            <button class="text-align btn btn-primary add-copy-btn" type="button" id="added" [disabled]="!(addactivityform.get('ActivityTypeId')?.value &&
+                            addactivityform.get('ActivityName')?.value)" (click)="addToActivityTable()">
+                                Add/Update </button>
+                        </div>
+
+                        <div class="table-responsive ">
+                            <table matSort (matSortChange)="sortData($event)"
+                                class="table table-hover table-radius table-bordered">
+                                <thead class="bg-secondary text-center ">
+                                    <tr>
+                                        <th style="width: 30px ;">S.No</th>
+                                        <th>Activity Type</th>
+                                        <th>Activity Name</th>
+                                        <th>Duration (Minutes)</th>
+                                        <th>Reps</th>
+                                        <th>Sets</th>
+                                        <th>Weight</th>
+                                        <th>Calories Burned</th>
+                                        <th>Intensity Level</th>
+                                        <th>Notes</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let obj of ActivityTableData;let i=index"
+                                        [ngClass]="{ 'editing': obj.isediting }">
+                                        <td class="text-center">{{ i + 1 }}</td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.ActivityTypeName }}</span>
+                                            <select *ngIf="obj.isediting" class="form-select" id="TextBox" (change)="updateType(obj, $event)">
+                                              <option *ngFor="let c of ActivityType" [ngValue]="c.ActivityName" [selected]="c.ActivityName === obj.ActivityTypeName">
+                                                {{c.ActivityName}}
+                                              </option>
+                                            </select>
+                                          </td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.ActivityName }}</span>
+                                            <input *ngIf="obj.isediting" type="text" [value]="obj.ActivityName"
+                                                (change)="updateName(obj, $event)" id="TextBox" class="form-control ">
+                                        </td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.Duration }}</span>
+                                            <input *ngIf="obj.isediting" type="number" [value]="obj.Duration"
+                                                (change)="updateDuration(obj, $event)" id="TextBox"
+                                                class="form-control ">
+                                        </td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.Reps }}</span>
+                                            <input *ngIf="obj.isediting" type="number" [value]="obj.Reps" id="TextBox"
+                                                (change)="updateReps(obj, $event)" class="form-control ">
+                                        </td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.SetsInfo }}</span>
+                                            <input *ngIf="obj.isediting" type="number" [value]="obj.SetsInfo"
+                                                id="TextBox" (change)="updateSets(obj, $event)" class="form-control ">
+                                        </td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.LiftWeight }}</span>
+                                            <input *ngIf="obj.isediting" type="number" [value]="obj.LiftWeight"
+                                                id="TextBox" (change)="updateWeight(obj, $event)" class="form-control ">
+                                        </td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.CaloriesBurned }}</span>
+                                            <input *ngIf="obj.isediting" type="number" [value]="obj.CaloriesBurned"
+                                                (change)="updateCalories(obj, $event)" id="TextBox"
+                                                class="form-control ">
+                                        </td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.IntensityLevelIdName }}</span>
+                                            <select *ngIf="obj.isediting" class="form-select " id="TextBox"
+                                                (change)="updateLevel(obj, $event)">
+                                                <option value= 0>--Select--</option>
+                                                <option *ngFor="let c of IntensityLevel" [ngValue]="c.IntensityName" [selected]="c.IntensityName === obj.IntensityLevelIdName">
+                                                    {{c.IntensityName}}</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <span *ngIf="!obj.isediting">{{ obj.Notes }}</span>
+                                            <textarea *ngIf="obj.isediting" type="text" [value]="obj.Notes" id="TextBox"
+                                                (change)="updateNotes(obj, $event)" class="form-control "></textarea>
+                                        </td>
+                                        <td class="text-center">
+
+                                            <button type="button"
+                                                class="text-center btn btn-primary btn-sm custom-small-btn"
+                                                (click)="togglsaveMode(obj)" *ngIf="isTableEdited(i)"><i
+                                                    class="fa-solid fa-save m-r-5"></i>
+                                                Save
+                                            </button>
+                                            <div class="dropdown dropdown-action" *ngIf="!isTableEdited(i)">
+                                                <a href="#" class="action-icon dropdown-toggle"
+                                                    data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                        class="material-icons">more_vert</i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" (click)="ToggleeEditMode(obj ,i)">
+                                                        <i class="fa-solid fa-pencil m-r-5"></i>Edit
+                                                    </a>
+                                                    <a class="dropdown-item" (click)="ToggleeDeleteMode(i)"><i
+                                                            class="fa-regular fa-trash-can m-r-5">
+                                                        </i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="ActivityTableData.length === 0">
+                                        <td colspan="10">
+                                            <h5 style="text-align: center;">No data found</h5>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row filter-row d-flex text-center mb-26">
+                        <div class="col-sm-12 col-md-12 text-center">
+                            <button class="btn btn-primary submit-btn mr-2"
+                                [disabled]="!addactivityform.valid">Save</button>
+                            <a href="javascript:void(0);" data-bs-dismiss="modal" id="modalclose"
+                                class="btn btn-primary cancel-btn">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Addition Modal -->
+
+<!-- #region Edit Model-->
+<div id="edit_activitytrack" class="modal custom-modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Activity Tracking </h5>
+            </div>
+            <div id="alert" [ngClass]="response ? 'alert alert-success' : 'alert alert-danger'"
+                *ngIf="responseText!=''">
+                {{responseText}}
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="editformmodel" (ngSubmit)="onEditSubmit()">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Date<span
+                                        class="text-danger"> * </span></label>
+                                <input type="Date" class="form-control" name="Date" [class.invalid]="
+                                editformmodel.get('Date')?.invalid &&
+                                editformmodel.get('Date')?.touched
+                            " formControlName="Date" />
+                                <div *ngIf="
+                                editformmodel.get('Date')?.invalid &&
+                                editformmodel.get('Date')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('Date')?.invalid &&
+                                    editformmodel.get('Date')?.touched
+                              " class="text-danger">
+                                        *Date is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Weight(Body)<span
+                                        class="text-danger"> * </span> </label>
+                                <input type="text" class="form-control" name="BodyWeight" [class.invalid]="
+                                editformmodel.get('BodyWeight')?.invalid &&
+                                editformmodel.get('BodyWeight')?.touched
+                            " formControlName="BodyWeight" />
+                                <div *ngIf="
+                                editformmodel.get('BodyWeight')?.invalid &&
+                                editformmodel.get('BodyWeight')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('BodyWeight')?.invalid &&
+                                    editformmodel.get('BodyWeight')?.touched
+                              " class="text-danger">
+                                        *Weight(Body) is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Fat (Body)<span
+                                        class="text-danger"> * </span> </label>
+                                <input type="number" class="form-control" name="BodyFat" [class.invalid]="
+                                editformmodel.get('BodyFat')?.invalid &&
+                                editformmodel.get('BodyFat')?.touched
+                            " formControlName="BodyFat" />
+                                <div *ngIf="
+                                editformmodel.get('BodyFat')?.invalid &&
+                                editformmodel.get('BodyFat')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('BodyFat')?.invalid &&
+                                    editformmodel.get('BodyFat')?.touched
+                              " class="text-danger">
+                                        *Fat (Body) is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Muscle Mass<span
+                                        class="text-danger"> * </span> </label>
+                                <input type="number" class="form-control" name="MuscleMass" [class.invalid]="
+                                editformmodel.get('MuscleMass')?.invalid &&
+                                editformmodel.get('MuscleMass')?.touched
+                            " formControlName="MuscleMass" />
+                                <div *ngIf="
+                                editformmodel.get('MuscleMass')?.invalid &&
+                                editformmodel.get('MuscleMass')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('MuscleMass')?.invalid &&
+                                    editformmodel.get('MuscleMass')?.touched
+                              " class="text-danger">
+                                        *Muscle Mass is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Activity Type<span
+                                        class="text-danger"> * </span></label>
+                                <select name="ActivityTypeId" class="form-control m-b form-select" [class.invalid]="
+                                        editformmodel.get('ActivityTypeId')?.invalid &&
+                                    editformmodel.get('ActivityTypeId')?.touched" formControlName="ActivityTypeId"
+                                    (ngModelChange)="onTypeChange($event) ">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let c of ActivityType" [ngValue]="c.Id">{{c.ActivityName}}</option>
+                                </select>
+                                <div *ngIf="
+                                editformmodel.get('ActivityTypeId')?.invalid &&
+                                editformmodel.get('ActivityTypeId')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('ActivityTypeId')?.invalid &&
+                                    editformmodel.get('ActivityTypeId')?.touched
+                              " class="text-danger">
+                                        *Activity Type is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Activity Name<span
+                                        class="text-danger"> * </span></label>
+                                <input type="text" class="form-control" name="ActivityName" [class.invalid]="
+                                editformmodel.get('ActivityName')?.invalid &&
+                                editformmodel.get('ActivityName')?.touched
+                            " formControlName="ActivityName" />
+                                <div *ngIf="
+                                editformmodel.get('ActivityName')?.invalid &&
+                                editformmodel.get('ActivityName')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('ActivityName')?.invalid &&
+                                    editformmodel.get('ActivityName')?.touched
+                              " class="text-danger">
+                                        *Activity Name is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Duration(Minutes) </label>
+                                <input type="text" class="form-control" name="Duration" [class.invalid]="
+                                editformmodel.get('Duration')?.invalid &&
+                                editformmodel.get('Duration')?.touched
+                            " formControlName="Duration" />
+                                <div *ngIf="
+                                editformmodel.get('Duration')?.invalid &&
+                                editformmodel.get('Duration')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('Duration')?.invalid &&
+                                    editformmodel.get('Duration')?.touched
+                              " class="text-danger">
+                                        *Duration is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Reps </label>
+                                <input type="text" class="form-control" name="Reps" [class.invalid]="
+                                editformmodel.get('Reps')?.invalid &&
+                                editformmodel.get('Reps')?.touched
+                            " formControlName="Reps" />
+                                <div *ngIf="
+                                editformmodel.get('Reps')?.invalid &&
+                                editformmodel.get('Reps')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('Reps')?.invalid &&
+                                    editformmodel.get('Reps')?.touched
+                              " class="text-danger">
+                                        *Reps is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Sets </label>
+                                <input type="text" class="form-control" name="SetsInfo" [class.invalid]="
+                                editformmodel.get('SetsInfo')?.invalid &&
+                                editformmodel.get('SetsInfo')?.touched
+                            " formControlName="SetsInfo" />
+                                <div *ngIf="
+                                editformmodel.get('SetsInfo')?.invalid &&
+                                editformmodel.get('SetsInfo')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('SetsInfo')?.invalid &&
+                                    editformmodel.get('SetsInfo')?.touched
+                              " class="text-danger">
+                                        *Sets is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Weight(Lifting) </label>
+                                <input type="text" class="form-control" name="LiftWeight" [class.invalid]="
+                                editformmodel.get('LiftWeight')?.invalid &&
+                                editformmodel.get('LiftWeight')?.touched
+                            " formControlName="LiftWeight" />
+                                <div *ngIf="
+                                editformmodel.get('LiftWeight')?.invalid &&
+                                editformmodel.get('LiftWeight')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('LiftWeight')?.invalid &&
+                                    editformmodel.get('LiftWeight')?.touched
+                              " class="text-danger">
+                                        *Weight(Lifting) is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Calories Burned </label>
+                                <input type="text" class="form-control" name="CaloriesBurned" [class.invalid]="
+                                editformmodel.get('CaloriesBurned')?.invalid &&
+                                editformmodel.get('CaloriesBurned')?.touched
+                            " formControlName="CaloriesBurned" />
+                                <div *ngIf="
+                                editformmodel.get('CaloriesBurned')?.invalid &&
+                                editformmodel.get('CaloriesBurned')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('CaloriesBurned')?.invalid &&
+                                    editformmodel.get('CaloriesBurned')?.touched
+                              " class="text-danger">
+                                        *Calories Burned is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-4 col-6">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Intensity Level </label>
+                                <select name="IntensityLevelId" class="form-control m-b form-select" [class.invalid]="
+                                        editformmodel.get('IntensityLevelId')?.invalid &&
+                                    editformmodel.get('IntensityLevelId')?.touched" formControlName="IntensityLevelId"
+                                    (ngModelChange)="onIntensityTypeChange($event)">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let c of IntensityLevel" [ngValue]="c.Id">{{c.IntensityName}}
+                                    </option>
+                                </select>
+                                <div *ngIf="
+                                editformmodel.get('IntensityLevelId')?.invalid &&
+                                editformmodel.get('IntensityLevelId')?.touched
+                            ">
+                                    <small *ngIf="
+                                    editformmodel.get('IntensityLevelId')?.invalid &&
+                                    editformmodel.get('IntensityLevelId')?.touched
+                              " class="text-danger">
+                                        *Intensity Level is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-8">
+                            <div class="input-block mb-3 form-row">
+                                <label for="" class="col-lg-12 control-label col-form-label">Notes </label>
+
+                                <textarea type="text" class="form-control" name="Notes" [class.invalid]="
+                                editformmodel.get('Notes')?.invalid &&
+                                editformmodel.get('Notes')?.touched
+                                " formControlName="Notes"></textarea>
+                                <div *ngIf="
+                                editformmodel.get('Notes')?.invalid &&
+                                editformmodel.get('Notes')?.touched
+                                     ">
+                                    <small *ngIf="
+                                    editformmodel.get('Notes')?.invalid &&
+                                    editformmodel.get('Notes')?.touched
+                                    " class="text-danger">
+                                        *Notes is required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row filter-row d-flex text-center mb-26">
+                            <div class="col-sm-12 col-md-12 text-center">
+                                <button class="btn btn-primary submit-btn mr-2"
+                                    [disabled]="!editformmodel.valid">Save</button>
+                                <a href="javascript:void(0);" data-bs-dismiss="modal" id="modalclose2"
+                                    class="btn btn-primary cancel-btn">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+
+<!-- Delete paycalender Modal -->
+<div class="modal custom-modal fade" id="delete_activitytrack" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Are you sure you want to delete?</h3>
+
+                </div>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6" style="padding-left: 110px;">
+                            <a class="btn btn-primary continue-btn">Delete</a>
+                        </div>
+                        <div class="col-6" style="padding-left: 0px;">
+                            <a href="javascript:void(0);" data-bs-dismiss="modal"
+                                class="btn btn-primary cancel-btn">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete paycalender Modal -->

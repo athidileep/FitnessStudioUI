@@ -1,0 +1,71 @@
+.custom-height {
+    //height: 588px; 
+    height: -webkit-fill-available;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid black;
+    margin-left: auto;
+}
+
+.account-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+.background-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    filter: blur(10px);
+}
+
+.background-blur img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.mb-26 {
+    margin-top: 10px;
+}
+
+.mb-checkbox {
+    margin-bottom: 12px;
+}
+
+.form-check-input[type=checkbox] {
+    border-radius: 0.25em;
+    width: 15px;
+    height: 15px;
+}
+
+.signIn-btn{
+    background: #ff9b44;
+    background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);
+    border: 0;
+    display: block;
+    font-size: 23px;
+    width: 35%;
+    border-radius: 26px;
+    padding: 7px;
+    min-height: 5px;
+    text-transform: none;
+    margin-left: auto;
+}
+.position-relative.login-page span {
+    position: absolute;
+    top: 18px;
+    right: 27px;
+}
+
+.alert { 
+    width: 100% !important;
+    margin-left: 0% !important;
+    --bs-alert-padding-y: 0.3rem;
+    margin-bottom: 3px;
+    margin-top: 3px;
+}
