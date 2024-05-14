@@ -1,0 +1,620 @@
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="page-title">Profile</h3>
+            </div>
+        </div>
+    </div>
+    <div id="alert" [ngClass]="response ? 'alert alert-success' : 'alert alert-danger'" *ngIf="responseText!=''">
+        {{responseText}}
+    </div>
+    <!-- /Page Header -->
+    <form [formGroup]="addProfileform" (ngSubmit)="onSubmit()">
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="page-header">
+                            <div class="col-sm-12">
+                                <h4>Personal Information <a class="edit-icon" title="Edit Profile" *ngIf="!Isedit"><i
+                                            (click)="editProfile()" class="fa-solid fa-pencil text-danger"></i></a></h4>
+                            </div>
+                        </div>
+
+                        <!-- <div class="profile-img-wrap" id="Profile-pic">
+                                <div class="profile-img-wrap edit-img">
+                                    <img class="inline-block" [src]="imageUrl || 'assets/img/profiles/avatar-20.jpg'"
+                                        alt="user">
+                                    <div class="fileupload btn">
+                                        <span class="btn-text">Edit</span>
+                                        <input class="upload" type="file" (change)="onFileSelected($event)">
+                                    </div>
+                                </div>
+                            </div> -->
+                        <div class="profile-basic">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label">First
+                                                    Name<span class="text-danger"> * </span></label>
+                                                <input type="text" class="form-control" name="FirstNames"
+                                                    [class.invalid]="
+                                                        addProfileform.get('FirstNames')?.invalid &&
+                                                        addProfileform.get('FirstNames')?.touched
+                                                    " formControlName="FirstNames" maxlength="60" />
+                                                <div *ngIf="
+                                                        addProfileform.get('FirstNames')?.invalid &&
+                                                        addProfileform.get('FirstNames')?.touched
+                                                    ">
+                                                    <small *ngIf="
+                                                    addProfileform.get('FirstNames')?.invalid &&
+                                                    addProfileform.get('FirstNames')?.touched
+                                                    " class="text-danger">
+                                                        *First Name is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label">Last
+                                                    Name<span class="text-danger"> * </span></label>
+                                                <input type="text" class="form-control" name="LastName" [class.invalid]="
+                                                        addProfileform.get('LastName')?.invalid &&
+                                                        addProfileform.get('LastName')?.touched
+                                                    " formControlName="LastName" maxlength="50" />
+                                                <div *ngIf="
+                                                        addProfileform.get('LastName')?.invalid &&
+                                                        addProfileform.get('LastName')?.touched
+                                                    ">
+                                                    <small *ngIf="
+                                                    addProfileform.get('LastName')?.invalid &&
+                                                    addProfileform.get('LastName')?.touched
+                                                    " class="text-danger">
+                                                        *Last Name is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-5 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label"> Date Of
+                                                    Birth<span class="text-danger"> * </span></label>
+                                                <input type="date" class="form-control" name="DateOfBirth"
+                                                    [class.invalid]="
+                                            addProfileform.get('DateOfBirth')?.invalid &&
+                                            addProfileform.get('DateOfBirth')?.touched
+                                        " formControlName="DateOfBirth" />
+                                                <div *ngIf="
+                                            addProfileform.get('DateOfBirth')?.invalid &&
+                                            addProfileform.get('DateOfBirth')?.touched
+                                        ">
+                                                    <small *ngIf="
+                                                addProfileform.get('DateOfBirth')?.invalid &&
+                                                addProfileform.get('DateOfBirth')?.touched
+                                        " class="text-danger">
+                                                        *Date Of Birth is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label"> Gender
+                                                    <span class="text-danger"> * </span></label>
+                                                <select name="GenderId" class="form-control m-b form-select"
+                                                    [class.invalid]="
+                                                    addProfileform.get('GenderId')?.invalid &&
+                                                    addProfileform.get('GenderId')?.touched"
+                                                    formControlName="GenderId">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let c of GenderType" [ngValue]="c.Id">
+                                                        {{c.GenderName}}</option>
+                                                </select>
+                                                <div *ngIf="
+                                                    addProfileform.get('GenderId')?.invalid &&
+                                                    addProfileform.get('GenderId')?.touched
+                                                ">
+                                                    <small *ngIf="
+                                                        addProfileform.get('GenderId')?.invalid &&
+                                                        addProfileform.get('GenderId')?.touched
+                                                " class="text-danger">
+                                                        *Gender is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label">
+                                                    Marital Status  <span class="text-danger"> * </span></label>
+                                                <select name="MaritalStatusId" class="form-control m-b form-select"
+                                                    [class.invalid]="
+                                                    addProfileform.get('MaritalStatusId')?.invalid &&
+                                                    addProfileform.get('MaritalStatusId')?.touched"
+                                                    formControlName="MaritalStatusId"
+                                                    (ngModelChange)="SpanAnniversary($event)">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let c of MaritalStatus" [ngValue]="c.Id">
+                                                        {{c.MaritalName}}</option>
+                                                </select>
+                                                <div *ngIf="
+                                                    addProfileform.get('MaritalStatusId')?.invalid &&
+                                                    addProfileform.get('MaritalStatusId')?.touched
+                                                ">
+                                                    <small *ngIf="
+                                                        addProfileform.get('MaritalStatusId')?.invalid &&
+                                                        addProfileform.get('MaritalStatusId')?.touched
+                                                " class="text-danger">
+                                                        *Marital Status is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6" *ngIf="Anniversary">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label">
+                                                    Anniversary Date </label>
+                                                <input type="date" class="form-control" name="AnniversaryDate"
+                                                    [class.invalid]="
+                                                    addProfileform.get('AnniversaryDate')?.invalid &&
+                                                    addProfileform.get('AnniversaryDate')?.touched
+                                                " formControlName="AnniversaryDate" />
+                                                <div *ngIf="
+                                                    addProfileform.get('AnniversaryDate')?.invalid &&
+                                                    addProfileform.get('AnniversaryDate')?.touched
+                                                ">
+                                                    <small *ngIf="
+                                                        addProfileform.get('AnniversaryDate')?.invalid &&
+                                                        addProfileform.get('AnniversaryDate')?.touched
+                                                " class="text-danger">
+                                                        *Anniversary Date is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label">
+                                                    Height (cm)
+                                                    <span class="text-danger"> * </span></label>
+                                                <input type="text" class="form-control" name="Height" [class.invalid]="
+                                                    addProfileform.get('Height')?.invalid &&
+                                                    addProfileform.get('Height')?.touched
+                                                " formControlName="Height" maxlength="7" />
+                                                <div *ngIf="
+                                                    addProfileform.get('Height')?.invalid &&
+                                                    addProfileform.get('Height')?.touched
+                                                ">
+                                                    <small *ngIf="
+                                                        addProfileform.get('Height')?.invalid &&
+                                                        addProfileform.get('Height')?.touched
+                                                " class="text-danger">
+                                                        *Height (cm) is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label">
+                                                    Weight (kg)
+                                                    <span class="text-danger"> * </span></label>
+                                                <input type="text" class="form-control" name="Weight" [class.invalid]="
+                                                    addProfileform.get('Weight')?.invalid &&
+                                                    addProfileform.get('Weight')?.touched
+                                                " formControlName="Weight" maxlength="7" />
+                                                <div *ngIf="
+                                                    addProfileform.get('Weight')?.invalid &&
+                                                    addProfileform.get('Weight')?.touched
+                                                ">
+                                                    <small *ngIf="
+                                                        addProfileform.get('Weight')?.invalid &&
+                                                        addProfileform.get('Weight')?.touched
+                                                " class="text-danger">
+                                                        *Weight (kg) is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label">
+                                                    From (Duration) </label>
+                                                <input type="date" class="form-control" name="MemberFrom"
+                                                    [class.invalid]="
+                                                        addProfileform.get('MemberFrom')?.invalid &&
+                                                        addProfileform.get('MemberFrom')?.touched
+                                                    " formControlName="MemberFrom" />
+                                                <div *ngIf="
+                                                    addProfileform.get('MemberFrom')?.invalid &&
+                                                    addProfileform.get('MemberFrom')?.touched
+                                                    ">
+                                                    <small *ngIf="
+                                                    addProfileform.get('MemberFrom')?.invalid &&
+                                                    addProfileform.get('MemberFrom')?.touched
+                                                    " class="text-danger">
+                                                        *From (Duration) is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label"> To
+                                                    (Duration) </label>
+                                                <input type="date" class="form-control" name="MemberTo" [class.invalid]="
+                                                            addProfileform.get('MemberTo')?.invalid &&
+                                                            addProfileform.get('MemberTo')?.touched
+                                                        " formControlName="MemberTo" />
+                                                <div *ngIf="
+                                                        addProfileform.get('MemberTo')?.invalid &&
+                                                        addProfileform.get('MemberTo')?.touched
+                                                    ">
+                                                    <small *ngIf="
+                                                            addProfileform.get('MemberTo')?.invalid &&
+                                                            addProfileform.get('MemberTo')?.touched
+                                                    " class="text-danger">
+                                                        *To (Duration) is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Contact Information</h4>
+                            <ul class="personal-info">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Email Address <span class="text-danger"> * </span> </label>
+                                            <input type="text" class="form-control" name="Email" [class.invalid]="
+                                                addProfileform.get('Email')?.invalid &&
+                                                addProfileform.get('Email')?.touched
+                                            " formControlName="Email" maxlength="50" />
+                                            <div *ngIf="
+                                                addProfileform.get('Email')?.invalid &&
+                                                addProfileform.get('Email')?.touched
+                                            ">
+                                                <small *ngIf="
+                                                    addProfileform.get('Email')?.invalid &&
+                                                    addProfileform.get('Email')?.touched
+                                            " class="text-danger">
+                                                    *Email Address is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Contact Number <span class="text-danger"> * </span></label>
+                                            <input type="text" class="form-control" name="ContactNumber"
+                                                [class.invalid]="
+                                            addProfileform.get('ContactNumber')?.invalid &&
+                                            addProfileform.get('ContactNumber')?.touched
+                                        " formControlName="ContactNumber" maxlength="10" />
+                                            <div *ngIf="
+                                            addProfileform.get('ContactNumber')?.invalid &&
+                                            addProfileform.get('ContactNumber')?.touched
+                                        ">
+                                                <small *ngIf="
+                                                addProfileform.get('ContactNumber')?.invalid &&
+                                                addProfileform.get('ContactNumber')?.touched
+                                        " class="text-danger">
+                                                    *Contact Number is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Emergency Contact Person </label>
+                                            <input type="text" class="form-control" name="EmergencyContactPerson"
+                                                [class.invalid]="
+                                                    addProfileform.get('EmergencyContactPerson')?.invalid &&
+                                                    addProfileform.get('EmergencyContactPerson')?.touched
+                                                " formControlName="EmergencyContactPerson" maxlength="10" />
+                                            <div *ngIf="
+                                                    addProfileform.get('EmergencyContactPerson')?.invalid &&
+                                                    addProfileform.get('EmergencyContactPerson')?.touched
+                                                ">
+                                                <small *ngIf="
+                                                        addProfileform.get('EmergencyContactPerson')?.invalid &&
+                                                        addProfileform.get('EmergencyContactPerson')?.touched
+                                                " class="text-danger">
+                                                    *Emergency Contact Person is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Emergency Contact Number </label>
+                                            <input type="text" class="form-control" name="EmergencyContactNumber"
+                                                [class.invalid]="
+                                                    addProfileform.get('EmergencyContactNumber')?.invalid &&
+                                                    addProfileform.get('EmergencyContactNumber')?.touched
+                                                " formControlName="EmergencyContactNumber" maxlength="10" />
+                                            <div *ngIf="
+                                                    addProfileform.get('EmergencyContactNumber')?.invalid &&
+                                                    addProfileform.get('EmergencyContactNumber')?.touched
+                                                ">
+                                                <small *ngIf="
+                                                        addProfileform.get('EmergencyContactNumber')?.invalid &&
+                                                        addProfileform.get('EmergencyContactNumber')?.touched
+                                                " class="text-danger">
+                                                    *Emergency Contact Number is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-8">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Address </label>
+                                            <textarea type="text" class="form-control" name="Address" [class.invalid]="
+                                                        addProfileform.get('Address')?.invalid &&
+                                                        addProfileform.get('Address')?.touched
+                                                    " formControlName="Address"></textarea>
+                                            <div *ngIf="
+                                                        addProfileform.get('Address')?.invalid &&
+                                                        addProfileform.get('Address')?.touched
+                                                    ">
+                                                <small *ngIf="
+                                                    addProfileform.get('Address')?.invalid &&
+                                                      addProfileform.get('Address')?.touched
+                                                     " class="text-danger">
+                                                    *Address is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                State  <span class="text-danger"> * </span></label>
+                                            <select name="LocationState" class="form-control m-b form-select"
+                                                [class.invalid]="
+                                            addProfileform.get('LocationState')?.invalid &&
+                                            addProfileform.get('LocationState')?.touched"
+                                                formControlName="LocationState">
+                                                <option value="">--Select--</option>
+                                                <option *ngFor="let c of LocationState" [ngValue]="c.Id">
+                                                    {{c.StateName}}</option>
+                                            </select>
+                                            <div *ngIf="
+                                            addProfileform.get('LocationState')?.invalid &&
+                                            addProfileform.get('LocationState')?.touched
+                                        ">
+                                                <small *ngIf="
+                                                addProfileform.get('LocationState')?.invalid &&
+                                                addProfileform.get('LocationState')?.touched
+                                        " class="text-danger">
+                                                    *State is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Country  <span class="text-danger"> * </span></label>
+                                            <select name="LocationCountry" class="form-control m-b form-select"
+                                                [class.invalid]="
+                                            addProfileform.get('LocationCountry')?.invalid &&
+                                            addProfileform.get('LocationCountry')?.touched"
+                                                formControlName="LocationCountry">
+                                                <option value="">--Select--</option>
+                                                <option *ngFor="let c of LocationCountry" [ngValue]="c.Id">
+                                                    {{c.CountryName}}</option>
+                                            </select>
+                                            <div *ngIf="
+                                            addProfileform.get('LocationCountry')?.invalid &&
+                                            addProfileform.get('LocationCountry')?.touched
+                                        ">
+                                                <small *ngIf="
+                                                addProfileform.get('LocationCountry')?.invalid &&
+                                                addProfileform.get('LocationCountry')?.touched
+                                        " class="text-danger">
+                                                    *Country is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tab-content">
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4> Medical Information </h4>
+                            <ul class="personal-info">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 col-6">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label"> Any
+                                                Medical
+                                                Conditions </label>
+                                            <select name="MedicalCondition" class="form-control m-b form-select"
+                                                [class.invalid]="
+                                            addProfileform.get('MedicalCondition')?.invalid &&
+                                            addProfileform.get('MedicalCondition')?.touched"
+                                                formControlName="MedicalCondition" (click)="onMedicalChange($event)">
+                                                <option value="">--Select--</option>
+                                                <option [ngValue]="true">Yes</option>
+                                                <option [ngValue]="false">No</option>
+                                            </select>
+                                            <div *ngIf="
+                                                addProfileform.get('MedicalCondition')?.invalid &&
+                                                addProfileform.get('MedicalCondition')?.touched
+                                            ">
+                                                <small *ngIf="
+                                                    addProfileform.get('MedicalCondition')?.invalid &&
+                                                    addProfileform.get('MedicalCondition')?.touched
+                                            " class="text-danger">
+                                                    *Any Medical Conditions is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-8">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Medical Conditions Details </label>
+                                            <textarea type="text" class="form-control" name="MedicalConditionDetails"
+                                                [class.invalid]="
+                                                        addProfileform.get('MedicalConditionDetails')?.invalid &&
+                                                        addProfileform.get('MedicalConditionDetails')?.touched
+                                                    " formControlName="MedicalConditionDetails"></textarea>
+                                            <div *ngIf="
+                                                        addProfileform.get('MedicalConditionDetails')?.invalid &&
+                                                        addProfileform.get('MedicalConditionDetails')?.touched
+                                                    ">
+                                                <small *ngIf="
+                                                    addProfileform.get('MedicalConditionDetails')?.invalid &&
+                                                      addProfileform.get('MedicalConditionDetails')?.touched
+                                                     " class="text-danger">
+                                                    *Medical Conditions Details is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-4">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Any Medications </label>
+                                            <select name="Medications" class="form-control m-b form-select"
+                                                [(ngModel)]="selectedValue" [class.invalid]="
+                                            addProfileform.get('Medications')?.invalid &&
+                                            addProfileform.get('Medications')?.touched" formControlName="Medications"
+                                                (click)="onMedicationChange($event)">
+                                                <option value="">--Select--</option>
+                                                <option [ngValue]="true">Yes</option>
+                                                <option [ngValue]="false">No</option>
+                                            </select>
+                                            <div *ngIf="
+                                                        addProfileform.get('Medications')?.invalid &&
+                                                        addProfileform.get('Medications')?.touched
+                                                    ">
+                                                <small *ngIf="
+                                                    addProfileform.get('Medications')?.invalid &&
+                                                      addProfileform.get('Medications')?.touched
+                                                     " class="text-danger">
+                                                    *Any Medications is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-8">
+                                        <div class="input-block mb-3 form-row">
+                                            <label for="" class="col-lg-12 control-label col-form-label">
+                                                Medications Details </label>
+                                            <textarea type="text" class="form-control" name="MedicationDetails"
+                                                [class.invalid]="
+                                                        addProfileform.get('MedicationDetails')?.invalid &&
+                                                        addProfileform.get('MedicationDetails')?.touched
+                                                    " formControlName="MedicationDetails"></textarea>
+                                            <div *ngIf="
+                                                        addProfileform.get('MedicationDetails')?.invalid &&
+                                                        addProfileform.get('MedicationDetails')?.touched
+                                                    ">
+                                                <small *ngIf="
+                                                    addProfileform.get('MedicationDetails')?.invalid &&
+                                                      addProfileform.get('MedicationDetails')?.touched
+                                                     " class="text-danger">
+                                                    *Medication Details is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" *ngIf="Isedit">
+                                        <div class="mb-25">
+                                            <div class=" col-md-12 text-center">
+                                                <button class="btn btn-primary submit-btn mr-2"
+                                                    [disabled]="!addProfileform.valid" type="submit">Save</button>
+                                                <a href="javascript:void(0);" data-bs-dismiss="modal" id="modalclose"
+                                                    class="btn btn-primary cancel-btn"
+                                                    (click)="GetProfileCreation()">Cancel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <!-- <div id="emp_profile">
+                <div class="row">
+                    <div class="col-md-6 d-flex">
+                        <div class="card profile-box flex-fill">
+                            <div class="card-body">
+                                <ul class="personal-info">
+                                    <h4> Duration </h4>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-6 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label"> From
+                                                    <span class="text-danger"> * </span></label>
+                                                <input type="date" class="form-control" name="From" [class.invalid]="
+                                                        addProfileform.get('From')?.invalid &&
+                                                        addProfileform.get('From')?.touched
+                                                    " formControlName="From" />
+                                                <div *ngIf="
+                                                    addProfileform.get('From')?.invalid &&
+                                                    addProfileform.get('From')?.touched
+                                                    ">
+                                                    <small *ngIf="
+                                                    addProfileform.get('From')?.invalid &&
+                                                    addProfileform.get('From')?.touched
+                                                    " class="text-danger">
+                                                        *From(Duration) is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-6 col-6">
+                                            <div class="input-block mb-3 form-row">
+                                                <label for="" class="col-lg-12 control-label col-form-label"> To
+                                                    <span class="text-danger"> * </span></label>
+                                                <input type="date" class="form-control" name="To" [class.invalid]="
+                                                            addProfileform.get('To')?.invalid &&
+                                                            addProfileform.get('To')?.touched
+                                                        " formControlName="To" />
+                                                <div *ngIf="
+                                                        addProfileform.get('To')?.invalid &&
+                                                        addProfileform.get('To')?.touched
+                                                    ">
+                                                    <small *ngIf="
+                                                            addProfileform.get('To')?.invalid &&
+                                                            addProfileform.get('To')?.touched
+                                                    " class="text-danger">
+                                                        *To(Duration) is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div> -->
+        </div>
+    </form>
+</div>
+<!-- /Page Content -->

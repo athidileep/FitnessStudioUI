@@ -1,0 +1,126 @@
+<!-- Page Content -->
+<div class="content" [ngClass]="layoutWidth === '2' ? 'container' : 'container-fluid'">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="page-title">Dashboard</h3>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+
+    <div class="row">
+        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-4">
+            <div class="card dash-widget">
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span class="dash-widget-icon"><i class="fa-solid fa-weight "></i></span>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <h4> Target Weight</h4>
+                                <h4>{{objTargetWeight}}</h4>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <h4> Current Weight</h4>
+                                <h4>{{objWeight}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-4">
+            <div class="card dash-widget">
+                <div class="card-body"> 
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span class="dash-widget-icon"><i class="fa-solid fa-weight-hanging"></i></span>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <h4> Target Body Fat</h4>
+                                <h4>{{objTargetBodyFat}}</h4>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <h4> Current Body Fat</h4>
+                                <h4>{{objBodyFat}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-4">
+            <div class="card dash-widget">
+                <div class="card-body"> 
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span class="dash-widget-icon"><i class="fa-solid fa-dumbbell"></i></span>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <h4> Target Muscle Mass</h4>
+                                <h4>{{objTargetMuscleMass}}</h4>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <h4> Current Muscle Mass</h4>
+                                <h4>{{objMuscleMass}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">Weight</h3>
+                            <div id="chart">
+                                <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                                    [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
+                                    [yaxis]="chartOptions.yaxis" [legend]="chartOptions.legend"
+                                    [fill]="chartOptions.fill" [stroke]="chartOptions.stroke"
+                                    [tooltip]="chartOptions.tooltip" [xaxis]="chartOptions.xaxis"
+                                    [grid]="chartOptions.grid"></apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">Muscle Mass</h3>
+                            <div id="chart">
+                                <apx-chart [series]="MuscleOption.series" [chart]="MuscleOption.chart"
+                                    [xaxis]="MuscleOption.xaxis" [stroke]="MuscleOption.stroke"
+                                    [dataLabels]="MuscleOption.dataLabels" [grid]="MuscleOption.grid"></apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 ">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Body Fat</h3>
+                <div id="chart">
+                    <apx-chart [series]="FatOption.series" [chart]="FatOption.chart" [xaxis]="FatOption.xaxis"
+                        [stroke]="FatOption.stroke" [dataLabels]="FatOption.dataLabels"
+                        [grid]="FatOption.grid"></apx-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Content -->
